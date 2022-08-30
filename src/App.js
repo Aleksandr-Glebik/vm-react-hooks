@@ -1,64 +1,38 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
+
+// let renderCount = 1
 
 function App() {
-  const [type, setType] = useState('users')
+  // const [renderCount, setRenderCount] = useState(1)
+  const [value, setValue] = useState('initial')
 
-  const [data, setData] = useState([])
-
-  const [pos, setPos] = useState({
-    x: 0,
-    y: 0
-  })
-
-  // console.log('render component');
-
-  // useEffect(() => {
-  //   console.log('render');
-  // })
+  const renderCount = useRef(1)
+  const inputRef = useRef(null)
+  const pervValue = useRef('')
 
   useEffect(() => {
-    // console.log(`type change ${type}`);
-    fetch(`https://jsonplaceholder.typicode.com/${type}`)
-      .then(response => response.json())
-      // .then(json => console.log(json))
-      .then(json => setData(json))
+    // setRenderCount(prev => prev + 1)
+    renderCount.current++
+    // console.log(inputRef.current);
+    console.log(inputRef.current.value);
+  })
 
-      return () => {
-        console.log('clean type');
-      }
-  }, [type])
-
-  const mouseMoveHandler = event => {
-    setPos({
-      x: event.clientX,
-      y: event.clientY
-    })
+  const focus = () => {
+    return inputRef.current.focus()
   }
 
   useEffect(() => {
-    console.log('componentDidMount');
+    pervValue.current = value
+  }, [value])
 
-    window.addEventListener('mousemove', mouseMoveHandler)
 
-    return () => {
-      window.removeEventListener('mousemove', mouseMoveHandler)
-    }
-  }, [])
 
   return (
     <div>
-      <h1>Ресурс: {type}</h1>
-      <button onClick={() => setType('users')} className='btn btn-success'>Пользователи</button>
-      <button onClick={() => setType('todos')} className='btn btn-danger'>Todos</button>
-      <button onClick={() => setType('posts')} className='btn btn-warning'>Posts</button>
-
-      <pre>
-        {JSON.stringify(pos, null, 2)}
-      </pre>
-
-      <pre>
-        {JSON.stringify(data, null, 2)}
-      </pre>
+      <h1>Количество рендеров {renderCount.current}</h1>
+      <h2>Предыдущее значение input {pervValue.current}</h2>
+      <input ref={inputRef} type={'text'} onChange={e => setValue(e.target.value)} value={value}/>
+      <button className='btn btn-success' onClick={focus}>Фокус</button>
     </div>
   )
 }
