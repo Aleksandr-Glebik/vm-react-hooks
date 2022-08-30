@@ -10,7 +10,7 @@ function App() {
     <AlertProvider>
       <div className='container pt-4'>
         <Alert />
-        <Main toggle={() => {}}  />
+        <Main />
       </div>
     </AlertProvider>
 
